@@ -1,0 +1,23 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  font-weight: var(--fw-medium);
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+/* Traffic / severity */
+.green  { background-color: var(--traffic-green-bg);  color: #166534; }
+.yellow { background-color: var(--traffic-yellow-bg); color: #713f12; }
+.red    { background-color: var(--traffic-red-bg);    color: #991b1b; }
+
+/* System / roles */
+.blue   { background-color: #dbeafe; color: #1e40af; }
+.slate  { background-color: #f1f5f9; color: #475569; }
+.amber  { background-color: #fef3c7; color: #92400e; }
+.emerald{ background-color: #d1fae5; color: #065f46; }
+.dark   { background-color: var(--color-bg-sidebar); color: #fff; }

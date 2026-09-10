@@ -1,0 +1,29 @@
+# backend/.gitignore
+# =====================
+# Never commit these to version control
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Real environment file (contains database password)
+.env
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# pytest cache
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Alembic compiled
+*.pyc
+
+# macOS
+.DS_Store

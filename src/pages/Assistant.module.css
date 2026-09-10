@@ -1,0 +1,368 @@
+.page {
+  display: flex;
+  gap: var(--space-5);
+  height: calc(100vh - var(--header-height) - var(--space-12));
+}
+
+/* Chat Pane */
+.chatPane {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  flex-shrink: 0;
+}
+
+.chatTitle {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.chatTitle h2 {
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-primary);
+  margin: 0;
+}
+
+.chatTitle p {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin-top: 1px;
+}
+
+.clearBtn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast);
+  border: 1px solid var(--color-border);
+  background: none;
+}
+
+.clearBtn:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+}
+
+/* Chat History */
+.chatHistory {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.message {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  animation: fadeIn var(--transition-base) ease;
+}
+
+.userMsg {
+  flex-direction: row-reverse;
+}
+
+.aiAvatar {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: var(--color-primary-subtle);
+  border: 1px solid rgba(22, 101, 52, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-primary);
+  flex-shrink: 0;
+}
+
+.bubble {
+  max-width: 70%;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.userMsg .bubble {
+  align-items: flex-end;
+}
+
+.bubbleText {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  line-height: 1.65;
+  white-space: pre-line;
+}
+
+.aiMsg .bubbleText {
+  background-color: var(--color-primary);
+  color: #fff;
+  border-bottom-left-radius: var(--radius-sm);
+}
+
+.userMsg .bubbleText {
+  background-color: var(--color-surface-hover);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.timestamp {
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  padding: 0 4px;
+}
+
+/* Typing */
+.typing {
+  display: flex;
+  gap: 4px;
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-primary);
+  border-radius: var(--radius-md);
+  border-bottom-left-radius: var(--radius-sm);
+  width: 56px;
+}
+
+.typing span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  animation: bounce 1.2s infinite;
+}
+
+.typing span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+.thinkingText {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  margin-top: 2px;
+  font-style: italic;
+}
+
+/* Input Area */
+.inputArea {
+  border-top: 1px solid var(--color-border);
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill {
+  padding: 5px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  background: var(--color-surface);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.pill:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--color-primary-subtle);
+}
+
+.inputForm {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+}
+
+.chatInput {
+  flex: 1;
+  height: 42px;
+  padding: 0 var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  font-size: var(--text-sm);
+  color: var(--color-text-primary);
+  background: var(--color-surface);
+  font-family: var(--font-ui);
+  transition: border-color var(--transition-fast);
+}
+
+.chatInput:focus {
+  border-color: var(--color-border-focus);
+  outline: none;
+}
+
+.chatInput:disabled {
+  background: var(--color-surface-hover);
+}
+
+.sendBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--color-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color var(--transition-fast), opacity var(--transition-fast);
+  flex-shrink: 0;
+  border: none;
+}
+
+.sendBtn:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+}
+
+.sendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Context Pane */
+.contextPane {
+  width: 300px;
+  flex-shrink: 0;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.contextTitle {
+  padding: var(--space-4) var(--space-5);
+  border-bottom: 1px solid var(--color-border);
+  font-size: var(--text-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--color-text-primary);
+}
+
+.contextEmpty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-3);
+  padding: var(--space-8);
+  color: var(--color-text-secondary);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+.miniMapBox {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.miniMapSvg {
+  width: 100%;
+  height: 120px;
+  background: var(--color-surface-hover);
+  border-radius: var(--radius-sm);
+}
+
+.miniMapLabel {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-top: var(--space-2);
+}
+
+.contextData {
+  padding: var(--space-4) var(--space-5);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.ctxRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--text-sm);
+}
+
+.ctxLabel {
+  color: var(--color-text-secondary);
+}
+
+.ctxValue {
+  font-weight: var(--fw-medium);
+  color: var(--color-text-primary);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+}
+
+.contextNote {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  font-style: italic;
+  line-height: 1.5;
+  margin-top: auto;
+  border-top: 1px solid var(--color-border);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bounce {
+
+  0%,
+  80%,
+  100% {
+    transform: scale(0);
+  }
+
+  40% {
+    transform: scale(1);
+  }
+}

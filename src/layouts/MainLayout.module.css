@@ -1,0 +1,23 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1;
+  margin-left: var(--sidebar-width);
+  transition: margin-left var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+}
+
+.layout.sidebarCollapsed .content {
+  margin-left: var(--sidebar-collapsed-width);
+}
+
+.main {
+  margin-top: var(--header-height);
+  padding: var(--space-6);
+  flex: 1;
+  min-height: calc(100vh - var(--header-height));
+}

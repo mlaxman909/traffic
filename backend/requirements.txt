@@ -1,0 +1,33 @@
+# SignalAI Backend — Python Dependencies
+# Python 3.11+ required (tested with Python 3.14.6)
+# Install inside a virtual environment:
+#   python3 -m venv venv
+#   source venv/bin/activate
+#   pip install -r requirements.txt
+
+# Web framework
+fastapi==0.141.1
+
+# ASGI server
+uvicorn[standard]==0.34.3
+
+# Database ORM
+sqlalchemy==2.0.41
+
+# PostgreSQL driver (compiled wheel — no libpq required separately)
+psycopg2-binary==2.9.12
+
+# Data validation — use latest versions for Python 3.14 support
+pydantic==2.13.4
+pydantic[email]==2.13.4
+pydantic-settings==2.9.1
+
+# Environment variables
+python-dotenv==1.1.1
+
+# Database migrations
+alembic==1.16.4
+
+# Authentication & Security
+pwdlib[argon2]==0.2.0
+PyJWT==2.8.0
