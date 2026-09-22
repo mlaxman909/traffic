@@ -14,14 +14,14 @@ export const currentOperator = {
 
 // ── Junctions ──────────────────────────────────────
 export const junctions = [
-  { id: 'J-101', name: 'Genda Circle',    status: 'red',    density: 96, vehicles: 184, greenTime: 45, phase: 'N/S Green',  lat: 28.65, lng: 77.21, weather: 'Light Rain, 27°C' },
-  { id: 'J-102', name: 'Kala Ghoda Circle',        status: 'red',    density: 88, vehicles: 162, greenTime: 40, phase: 'E/W Green',  lat: 28.64, lng: 77.22, weather: 'Clear, 29°C' },
-  { id: 'J-103', name: 'Chakli Circle',    status: 'yellow', density: 62, vehicles: 98,  greenTime: 35, phase: 'N/S Green',  lat: 28.66, lng: 77.20, weather: 'Cloudy, 28°C' },
-  { id: 'J-104', name: 'Fatehgunj Circle',      status: 'yellow', density: 55, vehicles: 87,  greenTime: 30, phase: 'E/W Green',  lat: 28.63, lng: 77.23, weather: 'Clear, 30°C' },
-  { id: 'J-105', name: 'Amit Nagar Circle',   status: 'green',  density: 28, vehicles: 42,  greenTime: 30, phase: 'N/S Green',  lat: 28.67, lng: 77.19, weather: 'Clear, 30°C' },
-  { id: 'J-106', name: 'Susen Circle',  status: 'green',  density: 18, vehicles: 26,  greenTime: 25, phase: 'All-way',    lat: 28.62, lng: 77.24, weather: 'Clear, 30°C' },
-  { id: 'J-107', name: 'Muktanand Circle',     status: 'green',  density: 12, vehicles: 19,  greenTime: 25, phase: 'N/S Green',  lat: 28.68, lng: 77.18, weather: 'Clear, 29°C' },
-  { id: 'J-108', name: 'Akota Circle',   status: 'red',    density: 92, vehicles: 175, greenTime: 50, phase: 'E/W Green',  lat: 28.61, lng: 77.25, weather: 'Humid, 31°C' },
+  { id: 'J-101', name: 'Genda Circle',      status: 'red',    density: 96, vehicles: 184, greenTime: 45, phase: 'N/S Green',  lat: 22.3056, lng: 73.1764, weather: 'Light Rain, 27°C' },
+  { id: 'J-102', name: 'Kala Ghoda Circle',  status: 'red',    density: 88, vehicles: 162, greenTime: 40, phase: 'E/W Green',  lat: 22.3054, lng: 73.1818, weather: 'Clear, 29°C' },
+  { id: 'J-103', name: 'Chakli Circle',      status: 'yellow', density: 62, vehicles: 98,  greenTime: 35, phase: 'N/S Green',  lat: 22.3086, lng: 73.1650, weather: 'Cloudy, 28°C' },
+  { id: 'J-104', name: 'Fatehgunj Circle',   status: 'yellow', density: 55, vehicles: 87,  greenTime: 30, phase: 'E/W Green',  lat: 22.3207, lng: 73.1882, weather: 'Clear, 30°C' },
+  { id: 'J-105', name: 'Amit Nagar Circle',  status: 'green',  density: 28, vehicles: 42,  greenTime: 30, phase: 'N/S Green',  lat: 22.3168, lng: 73.1975, weather: 'Clear, 30°C' },
+  { id: 'J-106', name: 'Susen Circle',       status: 'green',  density: 18, vehicles: 26,  greenTime: 25, phase: 'All-way',    lat: 22.2994, lng: 73.2081, weather: 'Clear, 30°C' },
+  { id: 'J-107', name: 'Muktanand Circle',   status: 'green',  density: 12, vehicles: 19,  greenTime: 25, phase: 'N/S Green',  lat: 22.3218, lng: 73.1979, weather: 'Clear, 29°C' },
+  { id: 'J-108', name: 'Akota Circle',       status: 'red',    density: 92, vehicles: 175, greenTime: 50, phase: 'E/W Green',  lat: 22.2933, lng: 73.1721, weather: 'Humid, 31°C' },
 ];
 
 // ── Dashboard KPIs ────────────────────────────────

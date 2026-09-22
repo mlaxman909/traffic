@@ -59,14 +59,14 @@ ON CONFLICT (email) DO NOTHING;
 -- Status mapping: red→HIGH, yellow→MODERATE, green→NORMAL
 
 INSERT INTO junctions (junction_code, name, latitude, longitude, status, traffic_density, current_green_time, weather_condition) VALUES
-    ('J-101', 'Genda Circle',         22.316440, 73.166340, 'HIGH',     96, 45, 'Light Rain, 27°C'),
-    ('J-102', 'Kala Ghoda Circle',    22.308250, 73.181800, 'HIGH',     88, 40, 'Clear, 29°C'),
-    ('J-103', 'Chakli Circle',        22.315050, 73.155890, 'MODERATE', 62, 35, 'Cloudy, 28°C'),
-    ('J-104', 'Fatehgunj Circle',     22.323600, 73.184300, 'MODERATE', 55, 30, 'Clear, 30°C'),
-    ('J-105', 'Amit Nagar Circle',    22.333170, 73.200150, 'NORMAL',   28, 30, 'Clear, 30°C'),
-    ('J-106', 'Susen Circle',         22.266200, 73.193200, 'NORMAL',   18, 25, 'Clear, 30°C'),
-    ('J-107', 'Muktanand Circle',     22.320400, 73.198300, 'NORMAL',   12, 25, 'Clear, 29°C'),
-    ('J-108', 'Akota Circle',         22.299500, 73.163300, 'HIGH',     92, 50, 'Humid, 31°C')
+    ('J-101', 'Genda Circle',         22.305600, 73.176400, 'HIGH',     96, 45, 'Light Rain, 27°C'),  -- Alkapuri
+    ('J-102', 'Kala Ghoda Circle',    22.305400, 73.181800, 'HIGH',     88, 40, 'Clear, 29°C'),       -- Sayajigunj
+    ('J-103', 'Chakli Circle',        22.308600, 73.165000, 'MODERATE', 62, 35, 'Cloudy, 28°C'),      -- Race Course Road
+    ('J-104', 'Fatehgunj Circle',     22.320700, 73.188200, 'MODERATE', 55, 30, 'Clear, 30°C'),       -- Fatehgunj
+    ('J-105', 'Amit Nagar Circle',    22.316800, 73.197500, 'NORMAL',   28, 30, 'Clear, 30°C'),       -- Karelibaug
+    ('J-106', 'Susen Circle',         22.299400, 73.208100, 'NORMAL',   18, 25, 'Clear, 30°C'),       -- Tarsali/Makarpura
+    ('J-107', 'Muktanand Circle',     22.321800, 73.197900, 'NORMAL',   12, 25, 'Clear, 29°C'),       -- Karelibaug
+    ('J-108', 'Akota Circle',         22.293300, 73.172100, 'HIGH',     92, 50, 'Humid, 31°C')        -- Akota
 ON CONFLICT (junction_code) DO NOTHING;
 
 

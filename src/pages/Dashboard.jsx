@@ -1,3 +1,4 @@
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   TrafficCone, Radio, AlertOctagon, Siren,
@@ -11,15 +12,16 @@ import KpiCard from '../components/Shared/KpiCard';
 import Badge from '../components/Shared/Badge';
 import Card, { CardHeader } from '../components/Shared/Card';
 import Button from '../components/Shared/Button';
-import { useApi } from '../hooks/useApi';
 import { getJunctions, getTrafficSummary, getAiRecommendations, getOperatorLogs } from '../services/api';
 import styles from './Dashboard.module.css';
 
+// ── Icon/badge maps (module-level constants — never recreated) ────────────────
+
 const activityIcon = {
-  ai_recommendation:  <CheckCircle2 size={14} color="var(--color-success)" />,
-  emergency_route: <Siren size={14} color="var(--color-warning)" />,
-  user:     <AlertOctagon size={14} color="var(--color-danger)" />,
-  default: <Activity size={14} />
+  ai_recommendation: <CheckCircle2 size={14} color="var(--color-success)" />,
+  emergency_route:   <Siren       size={14} color="var(--color-warning)" />,
+  user:              <AlertOctagon size={14} color="var(--color-danger)" />,
+  default:           <Activity    size={14} />,
 };
 
 const severityBadge = {
@@ -29,7 +31,7 @@ const severityBadge = {
   LOW:      'green',
 };
 
-// Map API status (HIGH/MODERATE/NORMAL) → badge severity
+// Map API status → badge severity
 function statusToSeverity(status) {
   if (status === 'HIGH' || status === 'CRITICAL') return 'red';
   if (status === 'MODERATE') return 'yellow';
@@ -40,8 +42,7 @@ function statusToSeverity(status) {
 function buildCongestionTrend(summary) {
   if (!summary || summary.length === 0) return [];
   const avgCongestion = summary.reduce((s, j) => s + (j.avg_congestion || 0), 0) / summary.length;
-  // Build a synthetic 12-point curve shaped around the real avg
-  const hours = ['00:00','02:00','04:00','06:00','08:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'];
+  const hours   = ['00:00','02:00','04:00','06:00','08:00','10:00','12:00','14:00','16:00','18:00','20:00','22:00'];
   const weights = [0.15, 0.08, 0.06, 0.25, 1.0, 0.80, 0.65, 0.60, 0.95, 1.10, 0.55, 0.32];
   return hours.map((time, i) => ({
     time,
@@ -50,7 +51,8 @@ function buildCongestionTrend(summary) {
   }));
 }
 
-// Inline error/loading components (no extra files needed)
+// ── Inline UI helpers ─────────────────────────────────────────────────────────
+
 function ApiError({ message }) {
   return (
     <div style={{ display:'flex', alignItems:'center', gap:8, padding:'12px 16px',
@@ -72,54 +74,90 @@ function Spinner() {
   );
 }
 
+// ── Dashboard ─────────────────────────────────────────────────────────────────
+
 export default function Dashboard() {
   const navigate = useNavigate();
 
-  // ── Real API data ──────────────────────────────────────────────────────────
-  const { data: junctions, loading: jLoading, error: jError } = useApi(getJunctions);
-  const { data: summary,   loading: sLoading, error: sError  } = useApi(getTrafficSummary);
-  
-  // Pending Recommendations
-  const { data: recommendationsData } = useApi(() => getAiRecommendations({ status: 'PENDING' }));
-  const pending = recommendationsData || [];
-  
-  // Operator Logs
-  const { data: logsData } = useApi(() => getOperatorLogs({ limit: 5 }));
-  const recentActivity = logsData || [];
+  // ── All 4 Dashboard API calls in a single state object ──────────────────────
+  // Using a single Promise.all fetch means:
+  //  1. All 4 requests fire in parallel (max concurrency)
+  //  2. Only ONE useEffect / ONE set of state updates
+  //  3. No risk of inline-function identity churn triggering repeated fetches
+  const [dashData, setDashData] = useState({
+    junctions:    null,
+    summary:      null,
+    pending:      [],
+    recentActivity: [],
+  });
+  const [loading, setLoading] = useState(true);
+  const [error,   setError]   = useState(null);
 
-  // ── Derived KPIs from real data ────────────────────────────────────────────
-  const totalJunctions    = junctions ? junctions.length : '—';
+  const loadDashboard = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+
+    // All 4 requests fire simultaneously — total wait = slowest single request
+    const [jRes, sRes, recRes, logRes] = await Promise.all([
+      getJunctions(),
+      getTrafficSummary(),
+      getAiRecommendations({ status: 'PENDING', limit: 100, skip: 0 }),
+      getOperatorLogs({ limit: 5 }),
+    ]);
+
+    // Collect any top-level errors (non-blocking — show partial data)
+    const firstError = jRes.error || sRes.error || null;
+
+    setDashData({
+      junctions:      jRes.data      || null,
+      summary:        sRes.data      || null,
+      pending:        recRes.data    || [],
+      recentActivity: logRes.data    || [],
+    });
+    setError(firstError);
+    setLoading(false);
+  }, []); // stable: no captured variables that change
+
+  // Fire once on mount — does NOT re-fire on re-renders
+  useEffect(() => {
+    loadDashboard();
+  }, [loadDashboard]);
+
+  // ── Derived KPIs ──────────────────────────────────────────────────────────
+  const { junctions, summary, pending, recentActivity } = dashData;
+
+  const totalJunctions     = junctions ? junctions.length : '—';
   const congestedJunctions = junctions
     ? junctions.filter((j) => j.status === 'HIGH' || j.status === 'CRITICAL').length
     : '—';
   const congestionTrendData = buildCongestionTrend(summary);
 
+  // ── Render ────────────────────────────────────────────────────────────────
+
   return (
     <div className={styles.page}>
       {/* API error banner (non-blocking) */}
-      {(jError || sError) && (
-        <ApiError message={jError || sError} />
-      )}
+      {error && <ApiError message={error} />}
 
-      {/* KPI Row — junctions from real API, others from mock */}
+      {/* KPI Row */}
       <section className={styles.kpiGrid} aria-label="Key performance indicators">
         <KpiCard
           title="Active Junctions"
-          value={jLoading ? '…' : totalJunctions}
+          value={loading ? '…' : totalJunctions}
           icon={TrafficCone}
           subtitle="Connected to PostgreSQL"
           indicator="green"
         />
         <KpiCard
           title="Congested Junctions"
-          value={jLoading ? '…' : congestedJunctions}
+          value={loading ? '…' : congestedJunctions}
           icon={AlertOctagon}
           indicator="red"
           subtitle="HIGH / CRITICAL status"
         />
         <KpiCard
           title="Pending Recommendations"
-          value={pending.length}
+          value={loading ? '…' : pending.length}
           icon={Radio}
           indicator="yellow"
           subtitle="Awaiting operator review"
@@ -140,19 +178,19 @@ export default function Dashboard() {
         />
       </section>
 
-      {/* Middle Row: Congestion Chart (real data) + Pending Queue (mock) */}
+      {/* Middle Row: Congestion Chart + Pending Queue */}
       <section className={styles.midGrid}>
         <Card className={styles.chartCard} padding={false}>
           <div style={{ padding: 'var(--space-6)' }}>
             <CardHeader
               title="Network Congestion Trend"
-              subtitle={sLoading ? 'Loading from PostgreSQL…' : 'Derived from real traffic records — vs. baseline'}
+              subtitle={loading ? 'Loading from PostgreSQL…' : 'Derived from real traffic records — vs. baseline'}
             />
           </div>
-          {sLoading ? (
+          {loading ? (
             <Spinner />
-          ) : sError ? (
-            <div style={{ padding: 16 }}><ApiError message={sError} /></div>
+          ) : error && !summary ? (
+            <div style={{ padding: 16 }}><ApiError message={error} /></div>
           ) : (
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={congestionTrendData} margin={{ left: -10, right: 16, bottom: 8 }}>
@@ -170,12 +208,12 @@ export default function Dashboard() {
           )}
         </Card>
 
-        {/* Pending Recommendations — mock (AI engine not yet implemented) */}
+        {/* Pending AI Recommendations */}
         <Card padding={false}>
           <div style={{ padding: 'var(--space-5) var(--space-5) 0' }}>
             <CardHeader
               title="Pending AI Recommendations"
-              subtitle={`${pending.length} awaiting review`}
+              subtitle={loading ? 'Loading…' : `${pending.length} awaiting review`}
               action={
                 <Button variant="ghost" size="sm" onClick={() => navigate('/decision-queue')}>
                   View All <ChevronRight size={14} />
@@ -205,7 +243,7 @@ export default function Dashboard() {
         </Card>
       </section>
 
-      {/* Bottom Row: Activity (mock) + Junction Live Panel (real API) */}
+      {/* Bottom Row: Activity + Junction Live Panel */}
       <section className={styles.bottomGrid}>
         <Card>
           <CardHeader title="Recent Operator Activity" />
@@ -222,16 +260,16 @@ export default function Dashboard() {
           </ul>
         </Card>
 
-        {/* Real junction status from API */}
+        {/* Junction Status */}
         <Card>
           <CardHeader
             title="Junction Status"
-            subtitle={jLoading ? 'Loading…' : `${totalJunctions} junctions — live from PostgreSQL`}
+            subtitle={loading ? 'Loading…' : `${totalJunctions} junctions — live from PostgreSQL`}
           />
-          {jLoading ? (
+          {loading ? (
             <Spinner />
-          ) : jError ? (
-            <ApiError message={jError} />
+          ) : error && !junctions ? (
+            <ApiError message={error} />
           ) : (
             <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
               {(junctions || []).slice(0, 5).map((j) => (

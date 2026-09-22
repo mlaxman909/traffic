@@ -58,9 +58,11 @@ function createMarkerIcon(color, isSelected) {
   });
 }
 
-// Vadodara City Center
-const CENTER_LAT = 22.3072;
-const CENTER_LNG = 73.1812;
+// Geographic center of all 8 Vadodara junction coordinates
+// Lat range: 22.2933–22.3218  →  center ≈ 22.3076
+// Lng range: 73.1650–73.2081  →  center ≈ 73.1866
+const CENTER_LAT = 22.3076;
+const CENTER_LNG = 73.1866;
 
 export default function TrafficMap() {
   const navigate = useNavigate();

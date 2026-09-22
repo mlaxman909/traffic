@@ -34,7 +34,9 @@
  */
 
 
-const BASE_URL = 'http://127.0.0.1:8000';
+// Use Vite proxy in dev so all requests go to same origin (no CORS issues).
+// Vite forwards /api/* → http://127.0.0.1:8000/api/*
+const BASE_URL = '';
 
 // ── Core fetch wrapper ──────────────────────────────────────────────────────
 
@@ -110,11 +112,15 @@ export async function getDatabaseHealth() {
  * Body: URL encoded form data (OAuth2PasswordRequestForm)
  */
 export async function login(username, password) {
-  const formData = new URLSearchParams();
-  formData.append('username', username);
-  formData.append('password', password);
+  // Trim whitespace — trailing spaces in email are a common cause of 401 errors
+  const cleanUsername = (username || '').trim();
+  const cleanPassword = (password || '').trim();
 
-  const res = await fetch(`${BASE_URL}/api/auth/login`, {
+  const formData = new URLSearchParams();
+  formData.append('username', cleanUsername);
+  formData.append('password', cleanPassword);
+
+  const res = await fetch(`/api/auth/login`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
