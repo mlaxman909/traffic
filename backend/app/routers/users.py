@@ -4,14 +4,13 @@ backend/app/routers/users.py
 CRUD endpoints for the User entity.
 
 Endpoints:
-  GET    /api/users          → List all users
-  GET    /api/users/{id}     → Get one user by ID
-  POST   /api/users          → Create a new user
-  PUT    /api/users/{id}     → Update an existing user
-  DELETE /api/users/{id}     → Delete a user
+  GET    /api/users          → List all users (requires auth)
+  GET    /api/users/{id}     → Get one user by ID (requires auth)
+  POST   /api/users          → Create a new user (SYSTEM_ADMINISTRATOR only)
+  PUT    /api/users/{id}     → Update an existing user (SYSTEM_ADMINISTRATOR only)
+  DELETE /api/users/{id}     → Delete a user (SYSTEM_ADMINISTRATOR only)
 
-Note: Authentication is NOT yet implemented (Phase 2 scope).
-JWT authentication will be added in Phase 3.
+Note: JWT authentication is active. All endpoints require a valid token.
 """
 
 from fastapi import APIRouter, Depends, HTTPException, status
@@ -21,7 +20,7 @@ from sqlalchemy.exc import IntegrityError
 from app.database import get_db
 from app.models.user import User, UserRole
 from app.schemas.user import UserCreate, UserUpdate, UserRead, UserSummary
-from app.services.auth import require_roles, get_password_hash
+from app.services.auth import require_roles, get_password_hash, get_current_user
 
 router = APIRouter(prefix="/api/users", tags=["Users"])
 
@@ -32,12 +31,13 @@ router = APIRouter(prefix="/api/users", tags=["Users"])
     "",
     response_model=list[UserSummary],
     summary="List all users",
-    description="Returns a list of all registered users. Password hash is never included.",
+    description="Returns a list of all registered users. Requires authentication. Password hash is never included.",
 )
 def list_users(
     skip: int = 0,
     limit: int = 100,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """
     Returns all users, paginated.

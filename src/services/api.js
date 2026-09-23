@@ -177,7 +177,9 @@ export async function createUser(payload) {
       role:          payload.role,
       status:        payload.status || 'ACTIVE',
       district:      payload.district || null,
-      password_hash: 'placeholder_hash',  // Phase 4 will hash properly
+      // Backend auto-hashes 'placeholder_hash' to bcrypt(password123).
+      // The new user can change their password via Settings after first login.
+      password_hash: payload.password_hash || 'placeholder_hash',
     }),
   });
 }

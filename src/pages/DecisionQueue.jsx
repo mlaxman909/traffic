@@ -23,9 +23,10 @@
  *   currentDensity, vehicleCount, expectedImpact → shown as N/A
  *
  * Phase 4 note:
- *   reviewed_by is currently hardcoded to user id=1 (J. Sharma) because
- *   JWT authentication is not yet implemented. Replace with the logged-in
- *   user's database ID once auth is in place.
+ *   reviewed_by is set from the authenticated JWT user on the backend
+ *   (current_user.id in PUT /api/ai-recommendations/{id}, line 277).
+ *   Frontend only needs to pass the status and rejection_reason; the
+ *   backend automatically records who performed the review.
  */
 
 import { useState, useCallback } from 'react';
