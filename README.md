@@ -8,17 +8,18 @@
 ## 📋 Table of Contents
 
 1. [Project Overview](#1-project-overview)
-2. [Technology Stack](#2-technology-stack)
-3. [Project Structure](#3-project-structure)
-4. [Getting Started](#4-getting-started)
-5. [🔐 Login Credentials (Demo)](#5--login-credentials-demo)
-6. [User Roles & Accounts](#6-user-roles--accounts)
-7. [Application Pages & Process Flow](#7-application-pages--process-flow)
-8. [Mock Data Reference](#8-mock-data-reference)
-9. [Navigation & Routing](#9-navigation--routing)
-10. [Design System](#10-design-system)
-11. [Development Phases](#11-development-phases)
-12. [Scripts](#12-scripts)
+2. [📸 Screenshots](#-screenshots)
+3. [Technology Stack](#2-technology-stack)
+4. [Project Structure](#3-project-structure)
+5. [Getting Started](#4-getting-started)
+6. [🔐 Login Credentials (Demo)](#5--login-credentials-demo)
+7. [User Roles & Accounts](#6-user-roles--accounts)
+8. [Application Pages & Process Flow](#7-application-pages--process-flow)
+9. [Mock Data Reference](#8-mock-data-reference)
+10. [Navigation & Routing](#9-navigation--routing)
+11. [Design System](#10-design-system)
+12. [Development Phases](#11-development-phases)
+13. [Scripts](#12-scripts)
 
 ---
 
@@ -34,6 +35,55 @@
 - 👥 Manage operator accounts and access levels (admin only)
 
 > **Note:** All data in Phase 1 is **simulated/mocked**. No real backend, database, or AI is connected yet. This phase focuses entirely on the frontend layout, UI structure, and form design.
+
+---
+
+## 📸 Screenshots
+
+> Real screenshots captured from the live application with PostgreSQL backend connected.
+
+### 🔐 Login Page
+![Login Page](public/screenshots/login.png)
+
+---
+
+### 📊 Dashboard — Overview & KPIs
+![Dashboard](public/screenshots/dashboard.png)
+
+---
+
+### 🗺️ Traffic Map — Live Junction Monitor
+![Traffic Map](public/screenshots/traffic_map.png)
+
+---
+
+### 📈 Analytics & Reporting
+![Analytics](public/screenshots/analytics.png)
+
+---
+
+### 🤖 Decision Queue — AI Recommendations
+![Decision Queue](public/screenshots/decision_queue.png)
+
+---
+
+### 🚨 Emergency Routing — Green Wave
+![Emergency Routing](public/screenshots/emergency_routing.png)
+
+---
+
+### 💬 SignalAI Assistant
+![SignalAI Assistant](public/screenshots/assistant.png)
+
+---
+
+### ⚙️ Settings
+![Settings](public/screenshots/settings.png)
+
+---
+
+### 👥 Admin — User Management
+![Admin Users](public/screenshots/admin_users.png)
 
 ---
 
