@@ -39,6 +39,12 @@ async function gotoProtected(page, url) {
       '--no-sandbox',
       '--disable-setuid-sandbox',
       '--window-size=1440,900',
+      '--enable-webgl',
+      '--use-gl=swiftshader',
+      '--enable-accelerated-2d-canvas',
+      '--disable-web-security',
+      '--ignore-gpu-blocklist',
+      '--enable-gpu-rasterization',
     ],
     defaultViewport: { width: 1440, height: 900 },
   });
@@ -61,7 +67,12 @@ async function gotoProtected(page, url) {
 
   // ── 3. TRAFFIC MAP ─────────────────────────────────────────────
   console.log('📸 Traffic Map...');
-  await gotoProtected(page, `${BASE_URL}/traffic-map`);
+  // Navigate and set auth
+  await page.goto(`${BASE_URL}/login`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+  await page.evaluate((token) => { localStorage.setItem('token', token); }, REAL_TOKEN);
+  await page.goto(`${BASE_URL}/traffic-map`, { waitUntil: 'networkidle0', timeout: 25000 });
+  // Wait extra long for map tiles to load
+  await sleep(7000);
   await page.screenshot({ path: path.join(outputDir, 'traffic_map.png'), fullPage: true });
   console.log('   ✅ traffic_map.png');
 
