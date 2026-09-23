@@ -5,7 +5,11 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>SignalAI — Municipal Traffic Control Portal</title>
-  <meta name="description" content="SignalAI Smart Traffic Signal Optimization Platform — Authorized Personnel Only" />
+    <meta name="description" content="SignalAI Smart Traffic Signal Optimization Platform — Authorized Personnel Only" />
+
+    <!-- MapLibre GL JS — loaded via CDN to avoid Vite/WebWorker bundling issues -->
+    <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
   </head>
   <body>
     <div id="root"></div>

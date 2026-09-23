@@ -1,6 +1,6 @@
 #!/bin/bash
 # ============================================================
-# SignalAI – One-command startup script
+# SignalAI – Bulletproof startup script
 # Usage:  bash start.sh
 # ============================================================
 
@@ -12,28 +12,25 @@ echo "║          SignalAI Startup Script             ║"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
 
-# ── Step 1: Kill any old processes on ports 5173 & 8000 ──
+# ── Step 1: Kill ALL old processes on 5173/5174/8000 ──────────────────────────
 echo "► Stopping any previous servers..."
-lsof -ti:5173 | xargs kill -9 2>/dev/null
-lsof -ti:5174 | xargs kill -9 2>/dev/null
-lsof -ti:8000 | xargs kill -9 2>/dev/null
-pkill -f "vite" 2>/dev/null
-pkill -f "uvicorn" 2>/dev/null
-sleep 1
-echo "  ✓ Ports 5173 and 8000 cleared"
+lsof -ti:5173,5174,5175,8000 | xargs kill -9 2>/dev/null
+pkill -9 -f "vite" 2>/dev/null
+pkill -9 -f "uvicorn" 2>/dev/null
+sleep 2
+echo "  ✓ All old processes cleared"
 
-# ── Step 2: Start Backend (FastAPI) ──
+# ── Step 2: Start Backend ──────────────────────────────────────────────────────
 echo ""
-echo "► Starting backend (FastAPI) on port 8000..."
+echo "► Starting backend (FastAPI) on http://127.0.0.1:8000 ..."
 cd "$PROJECT_DIR/backend"
 source venv/bin/activate
-nohup uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload \
+nohup uvicorn app.main:app --host 127.0.0.1 --port 8000 \
   > "$PROJECT_DIR/backend.log" 2>&1 &
 BACKEND_PID=$!
-echo "  ✓ Backend started (PID $BACKEND_PID)"
+echo "  Backend PID: $BACKEND_PID"
 
-# Wait for backend to be ready
-echo "  Waiting for backend to be ready..."
+# Wait for backend to respond
 for i in {1..20}; do
   if curl -s http://127.0.0.1:8000/api/health > /dev/null 2>&1; then
     echo "  ✓ Backend is healthy!"
@@ -41,36 +38,49 @@ for i in {1..20}; do
   fi
   sleep 1
   if [ $i -eq 20 ]; then
-    echo "  ✗ Backend failed to start. Check backend.log"
+    echo "  ✗ Backend failed to start. See backend.log"
     exit 1
   fi
 done
 
-# ── Step 3: Start Frontend (Vite) ──
+# ── Step 3: Start Frontend ─────────────────────────────────────────────────────
 echo ""
-echo "► Starting frontend (Vite) on port 5173..."
+echo "► Starting frontend (Vite) on http://localhost:5173 ..."
 cd "$PROJECT_DIR"
 deactivate 2>/dev/null
-nohup npm run dev -- --port 5173 --strictPort \
-  > "$PROJECT_DIR/frontend.log" 2>&1 &
-FRONTEND_PID=$!
-sleep 3
-echo "  ✓ Frontend started (PID $FRONTEND_PID)"
 
-# ── Done ──
+# Launch Vite fully detached (subshell + nohup = proper macOS daemon)
+(nohup npx vite --port 5173 > "$PROJECT_DIR/frontend.log" 2>&1 &)
+
+# Wait for Vite to respond
+echo "  Waiting for Vite..."
+FRONTEND_PID=""
+for i in {1..20}; do
+  sleep 1
+  FRONTEND_PID=$(lsof -ti:5173 2>/dev/null | head -1)
+  if curl -s --max-time 2 http://localhost:5173 > /dev/null 2>&1; then
+    echo "  ✓ Frontend is up! (PID $FRONTEND_PID)"
+    break
+  fi
+  if [ $i -eq 20 ]; then
+    echo "  ✗ Frontend failed to start. Last log:"
+    tail -25 "$PROJECT_DIR/frontend.log"
+    exit 1
+  fi
+done
+
+# ── Done ───────────────────────────────────────────────────────────────────────
 echo ""
 echo "╔══════════════════════════════════════════════╗"
-echo "║  ✅  SignalAI is running!                    ║"
+echo "║  ✅  SignalAI is LIVE!                       ║"
 echo "║                                              ║"
-echo "║  Frontend:  http://localhost:5173            ║"
-echo "║  Backend:   http://localhost:8000            ║"
-echo "║  API Docs:  http://localhost:8000/docs       ║"
+echo "║  👉 Open: http://localhost:5173              ║"
 echo "║                                              ║"
-echo "║  Login credentials (all users):             ║"
+echo "║  Login:                                      ║"
 echo "║    Email:    j.sharma@signalai.gov.in        ║"
 echo "║    Password: password123                     ║"
 echo "╚══════════════════════════════════════════════╝"
 echo ""
-echo "  Logs:  backend.log | frontend.log"
+echo "  Logs:  tail -f frontend.log | backend.log"
 echo "  Stop:  bash stop.sh"
 echo ""

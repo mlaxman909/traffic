@@ -48,26 +48,13 @@ ul, ol { list-style: none; }
 
 img { display: block; max-width: 100%; }
 
-/* ── Leaflet CSS isolation ───────────────────────────────────────────────────
-   The global box-sizing reset and img rules break Leaflet's internal tile &
-   marker positioning. These overrides restore correct Leaflet behaviour.
+/* ── TomTom Map container ───────────────────────────────────────────────────
+   Ensure TomTom map canvas elements are not affected by global img reset.
    ───────────────────────────────────────────────────────────────────────── */
-.leaflet-container *,
-.leaflet-container *::before,
-.leaflet-container *::after {
-  box-sizing: content-box;
-}
-
-.leaflet-container img {
+.tomtom-map img {
   display: inline;
   max-width: none;
   max-height: none;
-}
-
-/* Ensure custom divIcon wrappers use border-box so our w/h sizing is correct */
-.custom-leaflet-marker,
-.custom-leaflet-marker * {
-  box-sizing: border-box !important;
 }
 
 h1 { font-size: var(--text-2xl); font-weight: var(--fw-bold); }

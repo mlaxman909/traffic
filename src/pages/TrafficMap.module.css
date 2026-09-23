@@ -1,3 +1,15 @@
+/* ── MapLibre Popup overrides ─────────────────────────────────────────────── */
+:global(.tt-popup .maplibregl-popup-content) {
+  padding: 6px 10px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  font-family: 'Inter', sans-serif;
+  pointer-events: none;
+}
+:global(.tt-popup .maplibregl-popup-tip) {
+  display: none;  /* hide the arrow tip — cleaner look */
+}
+
 .page {
   display: flex;
   gap: var(--space-5);
